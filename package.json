@@ -20,7 +20,8 @@
   },
   "homepage": "https://github.com/mavhungu/File-Metadata-Microservice#readme",
   "dependencies": {
-    "expess": "^0.0.1-security",
+    "express": "^4.17.1",
+    "hbs": "^4.2.0",
     "multer": "^1.4.3"
   }
 }
