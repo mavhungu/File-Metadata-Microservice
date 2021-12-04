@@ -1,22 +1,14 @@
 {{home}}
 
-<form>
-  <div class="form-group">
-    <input type="file" name="upload" />
-  </div>
+<form method="post" enctype="multipart/form-data" action="/api/profile">
   <div class="input-group mb-3">
     <input
-      type="text"
+      type="file"
       class="form-control"
-      placeholder="Recipient's username"
-      aria-label="Recipient's username"
-      aria-describedby="button-addon2"
+      id="inputGroupFile02"
+      name="upfile"
     />
-    <button
-      class="btn btn-outline-secondary"
-      type="button"
-      id="button-addon2"
-    >Button</button>
+    <label class="input-group-text" for="inputGroupFile02">Upload</label>
   </div>
   <button type="submit" class="btn btn-primary">Upload</button>
 </form>
