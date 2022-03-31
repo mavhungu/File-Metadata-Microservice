@@ -3,7 +3,9 @@ const path = require('path')
 const multer = require('multer')
 const hbs = require('hbs')
 
-const upload = multer({
+const upload = multer({ dest: 'uploads/' })
+
+/*const upload = multer({
     limits:{
         fileSize: 2000000
     },
@@ -13,14 +15,14 @@ const upload = multer({
         }
         cb(undefined, true)
     }
-});
+});*/
 
 const port = process.env.PORT || 3000
 
 const app = express()
 
 const home = require('./router/home')
-const fileAnalyse = require('./router/fileanalyseRouter')
+//const fileAnalyse = require('./router/fileanalyseRouter')
 
 app.set('view engine','hbs')
 app.set('views',path.join(__dirname,'templates/views'))
@@ -31,7 +33,17 @@ app.use(express.urlencoded({extended: false}))
 app.use(express.static(path.join(__dirname,'public')))
 
 app.get('/',home)
-app.post('/api/profile',upload.single('upfile'),fileAnalyse)
+//app.post('/api/fileanalyse',upload.single('upfile'),fileAnalyse)
+
+app.post('/api/fileanalyse',upload.single('upfile'), (req, res) => {
+    try {
+      const { originalname, mimetype, size } = req.file;
+  
+      res.json({ name: originalname, type: mimetype, size });
+    } catch (err) {
+      res.send(err.message)
+    }
+  })
 
 
 app.listen(port,()=>{
