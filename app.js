@@ -1,51 +1,33 @@
-const express = require('express')
-const path = require('path')
-const multer = require('multer')
-const hbs = require('hbs')
+require('dotenv').config();
 
-const upload = multer({ dest: 'uploads/' })
+const express = require('express');
+const cors = require('cors');
+const { json, urlencoded } = require('body-parser');
+const multer  = require('multer');
 
-/*const upload = multer({
-    limits:{
-        fileSize: 2000000
-    },
-    fileFilter(req, file,cb){
-        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
-            return cb(new Error('Please upload image file'))
-        }
-        cb(undefined, true)
-    }
-});*/
+const upload = multer({ dest: 'uploads/' });
+const app = express();
 
-const port = process.env.PORT || 3000
+app.use(cors());
+app.use(json());
+app.use(urlencoded({ extended: false }));
+app.use('/public', express.static(process.cwd() + '/public'));
 
-const app = express()
-
-const home = require('./router/home')
-//const fileAnalyse = require('./router/fileanalyseRouter')
-
-app.set('view engine','hbs')
-app.set('views',path.join(__dirname,'templates/views'))
-hbs.registerPartials(path.join(__dirname,'templates/partials'))
-
-app.use(express.json())
-app.use(express.urlencoded({extended: false}))
-app.use(express.static(path.join(__dirname,'public')))
-
-app.get('/',home)
-//app.post('/api/fileanalyse',upload.single('upfile'),fileAnalyse)
+app.get('/', function (req, res) {
+    res.sendFile(process.cwd() + '/views/index.html');
+});
 
 app.post('/api/fileanalyse',upload.single('upfile'), (req, res) => {
-    try {
-      const { originalname, mimetype, size } = req.file;
-  
-      res.json({ name: originalname, type: mimetype, size });
-    } catch (err) {
-      res.send(err.message)
-    }
-  })
+  try {
+    const { originalname, mimetype, size } = req.file;
 
-
-app.listen(port,()=>{
-    console.log(`server is running on ${port}`)
+    res.json({ name: originalname, type: mimetype, size });
+  } catch (err) {
+    res.send(err.message)
+  }
 })
+
+const port = process.env.PORT || 3000;
+app.listen(port, function () {
+  console.log('Your app is listening on port ' + port)
+});
